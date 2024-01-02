@@ -1,0 +1,13 @@
+version: '3'
+services:
+
+  ddtf:
+    build:
+      context: .
+    env_file:
+      - .env
+    command: bash execute.sh
+    volumes:
+      - ./terraform:/terraform
+      - ./code:/code
+      - ./conf.yaml:/conf.yaml

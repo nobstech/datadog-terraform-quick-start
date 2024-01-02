@@ -1,0 +1,229 @@
+# Note:
+#   Configurations shown below are examples for how to import different types
+#   of Datadog resources. There are several options depending on the resource,
+#   or no options at all for others. Please see each resource type for examples.
+#
+#   Not providing any options will import all resources of the type. Example:
+#     dashboard:
+#     monitor:
+#   Will import ALL dashboards and all monitors, whereas the below examples for 
+#   dashboards and monitors will only import specified objects.
+#
+#   Removing a resource type will cause all of the resources belonging to the type to NOT
+#   be imported (unless "all") is present in the list. There are some exceptions; these will
+#   be listed where appropriate.
+
+
+resources:
+  # The "all" option will superceed any other configuration choices 
+  # and import every applicable item in the account
+  - all:
+
+  # Individual dashboard ID. Can be found in the URL of a dashboard, such as
+  # https://app.datadoghq.com/dashboard/abc-123-xyz/example-dashboard
+  - dashboard:
+      - abc-123-xyz
+      - def-456-uvw
+      - ghi-789-rst
+
+  # Individual dashboard list ID. Can be found in the URL of a dashboard list, such as
+  # https://app.datadoghq.com/dashboard/lists/manual/123456
+  - dashboard_list:
+      - 123456
+      - 789012
+      - 345678
+
+  # Individual log archive rule, found in the Log Forwarding section of log configuration when
+  # editing an archive, such as
+  # https://app.datadoghq.com/logs/pipelines/log-forwarding/archives/edit/ozjyo4rWQSe5U1l1XfQrAQ
+  - logs_archive:
+      - ozjyo4rWQSe5U1l1XfQrAQ
+      - xzjs82jsbna9821saAsXaw
+      - hjsoxACA124fsDaxchqerC
+
+  # Archive ordering resources cannot be specified; it is either imported or not.
+  - logs_archive_order:
+
+  # ID of a custom created log pipeline. Can be found in the URL when editing an individual pipeline, such as
+  # https://app.datadoghq.com/logs/pipelines/pipeline/edit/Txuww8kcQyWu-dcZKNU58A
+  - logs_custom_pipeline:
+      - Txuww8kcQyWu-dcZKNU58A
+      - VZXtrq43243S-asdXCascZ
+      - NXxcvsdDFsds-342GSSxzx
+
+  # ID of built-in log pipeline for an enable integration. Can be found in the URL when editing an individual pipeline, such as
+  # https://app.datadoghq.com/logs/pipelines/pipeline/edit/Txuww8kcQyWu-dcZKNU58A
+  # Generally recomended to import all instead of specifying IDs
+  - logs_integration_pipeline:
+      - Txuww8kcQyWu-dcZKNU58A
+      - VZXtrq43243S-asdXCascZ
+      - NXxcvsdDFsds-342GSSxzx
+
+  # Log pipeline ordering resources cannot be specified; it is either imported or not.
+  - logs_pipeline_order:
+
+  # The name of a log index
+  - logs_index:
+      - example_index
+      - foo_bar_index
+
+  # Log index order resources cannot be specified; it is either imported or not
+  - logs_index_order:
+
+  # Account ID, Role name, or a combination of the AWS integration to import. If a value or values are present for "accounts",
+  # all integrations matching that account will be imported. If a value or values are present for "roles", any AWS integration
+  # utilizing that role name will be imported. If a value for account_role is provided, where the value is account_id:role_name,
+  # only the integrations with the specified account and role combination will be imported. Any combination of these options can 
+  # be utilized. Any duplicate accounts that are pulled in will be condensed. 
+  - integration_aws:
+    - aws_account_ids:
+      - 123456789
+      - 987654321
+    - roles:
+      - datadog-integration-role
+      - example-role
+    - account_role:
+      - 123456789:example-role
+
+  # ARN of the Lambda function used for Log Autosubscription. Requires the full ARN.
+  - integration_aws_lambda_arn:
+    - arn:aws:lambda:us-east-1:123456789012:function:my-function
+    - arn:aws:lambda:us-east-2:123456789012:function:my-function
+
+  # IDs of the AWS Accounts to import log collection rules for 
+  - integration_aws_log_collection:
+    - 123456789
+    - 987654321
+
+  # Client ID of Azure account integration to import
+  - integration_azure:
+    - 12412463-6452-2342-2342-234624234234
+
+  # Currently bugged and does not work; awaiting fix
+  # - integration_gcp:
+
+
+  # Name of the PagerDuty service to import. Schedules are currently not supported.
+  - integration_pagerduty_service_object:
+      - sample_service
+
+  # Name of the Slack account to import channels for, or name of the account and specific channels to import. Adding
+  # just the account name, such as "AcmeSlack" will import any channels added to Datadog. However, adding
+  # AcmeSlack:
+  #  - alerts
+  #  - staging
+  # Will only import #alerts and #staging for the AcmeSlack account. Do not include the leading # in the channel name.
+  # Note: one of these options is required, and both can be used at once. If nothing is provided, nothing will be imported.
+  - integration_slack_channel:
+      - slack_account_names:
+        - test-account
+      - slack_account_channels:
+        - test-account:
+          - foo
+          - bar
+
+  # Name of metrics to import metadata for. This is generally useful for custom metrics where you have updated units
+  # descriptions, and data types. If nothing is provided, nothing will be imported.
+  - metric_metadata:
+    - example.metric.name
+
+  # Settings for importing monitors. IDs are IDs of monitors, and will import a list of single monitors
+  # Tags will be a combination search; the below example for "tags" will only import monitors matching foo:bar AND env:prod.
+  # Each entry below tagsets will pull in monitors matching these combinations. The "team_a"
+  # entry will import all monitors matching team:a AND env:stg, and the "app_b" entry will import
+  # all monitors matching application:b AND env:prd. The key names (such as "team_a" and "app_b") are arbitrary
+  # and only used for configuration organization.
+  - monitor:
+    - ids:
+      - abc-123-xyz
+      - def-456-uvw
+    - tags:
+      - foo:bar
+      - env:prod
+    - tagsets:
+      - team_a:
+        - team:a
+        - env:stg
+      - app_b:
+        - application:b
+        - env:prd
+
+  # ID of a permission role in Datadog. Role ID can be found by selecting a role in https://app.datadoghq.com/organization-settings/roles
+  # and copying the ID value from the URL
+  - role:
+    - abcdefg-1234-7890-hijk-abc123def456
+
+  # Rules provided OOTB by Datadog; can be found in Detection Rule with the query "defaultRule:true". The ID can be found in the url
+  # when editing or viewing a rule, such as https://app.datadoghq.com/security/rules/view/abc-123-xyz
+  - security_monitoring_default_rule:
+    - abc-123-xyz
+    - def-456-uvw
+
+  # User created security rules; can be found in Detection Rule with the query "defaultRule:false". The ID can be found in the url
+  # when editing or viewing a rule, such as https://app.datadoghq.com/security/rules/view/abc-123-xyz
+  - security_monitoring_rule:
+    - abc-123-xyz
+    - def-456-uvw
+
+  # Settings for importing SLOs. IDs are IDs of SLOs, and will import a list of single SLOs
+  # Tags will be a combination search; the below example for "tags" will only import SLOs matching foo:bar AND env:prod.
+  # Each entry below tagsets will pull in SLOs matching these combinations. The "team_a"
+  # entry will import all SLOs matching team:a AND env:stg, and the "app_b" entry will import
+  # all SLOs matching application:b AND env:prd. The key names (such as "team_a" and "app_b") are arbitrary
+  # and only used for configuration organization.
+  - service_level_objective:
+    - ids:
+      - abc-123-xyz
+      - def-456-uvw
+    - tags:
+      - foo:bar
+      - env:prod
+    - tagsets:
+      - team_a:
+        - team:a
+        - env:stg
+      - app_b:
+        - application:b
+        - env:prd
+
+
+  # Settings for importing synthetics. IDs are IDs of synthetics, and will import a list of single synthetics
+  # Tags will be a combination search; the below example for "tags" will only import synthetics matching foo:bar AND env:prod.
+  # Each entry below tagsets will pull in SLOs matching these combinations. The "team_a"
+  # entry will import all synthetics matching team:a AND env:stg, and the "app_b" entry will import
+  # all synthetics matching application:b AND env:prd. The key names (such as "team_a" and "app_b") are arbitrary
+  # and only used for configuration organization.
+  - synthetics_test:
+    - ids:
+      - abc-123-xyz
+      - def-456-uvw
+    - tags:
+      - foo:bar
+      - env:prod
+    - tagsets:
+      - team_a:
+        - team:a
+        - env:stg
+      - app_b:
+        - application:b
+        - env:prd
+
+  # ID of a synthetics global variable. Can be found when editing a synthetic variable, such as
+  # https://app.datadoghq.com/synthetics/settings/variables/form/abcdefg-1234-7890-hijk-abc123def456
+  # Note: an ID value is required if importing variables is desired; all will not be imported by default.
+  # Additionally, the value will not be imported if the variable is set to "Hide and obfuscate variable value" in the UI.
+  # There is potential to reveal sensitive data in Terraform files with this setting; use with caution.
+  - synthetics_global_variable:
+    - abcdefg-1234-7890-hijk-abc123def456
+
+  # ID of a Synthetic private location. Can be found when viewing a synthetic location in 
+  # https://app.datadoghq.com/synthetics/settings/private-locations. The leading "pl:" is necessary,
+  # utilize the copy function from the panel to get the full value
+  - synthetics_private_location:
+    - pl:example_location-123456789abcdefgh
+    - pl:tf_test-7ee347ba6e21a3c405f615752c241b81
+
+  # The ID of a user to import. Can be found when viewing a user in the Organization Settings panel, such as 
+  # https://app.datadoghq.com/organization-settings/users?user_id=abcdefg-1234-7890-hijk-abc123def456
+  - user:
+    - abcdefg-1234-7890-hijk-abc123def456
