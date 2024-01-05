@@ -110,6 +110,8 @@ All that is required to run this is Docker and docker-compose.
 1. Copy `.env.sample` to `.env` via `mv .env.sample .env`
 2. In the `.env` file, update your API and Application keys, and Site value if necessary
     - Application key must be scoped to have read capabilities to the account
+    - If your Datadog site is the default of app.datadoghq.com, you can leave this blank. Otherwise, include a value such as
+    `https://us3.datadoghq.com`. [See the site documentation for more examples.](https://docs.datadoghq.com/getting_started/site/)
 3. Run `docker-compose build`
 4. Edit the conf.yaml file to your desired configuration (see `example_conf.yaml` for more detail)
 5. Run `docker-compose run ddtf` to execute the process
