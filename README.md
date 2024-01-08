@@ -235,3 +235,5 @@ open source tools.
 Have a question, need some help, or want to report a bug? Please enter an issue within the repository.
 
 Need more help than we can give through an Issue? [Head over to our website and get in touch!](https://www.nobs.tech/contact)
+
+![logo](https://nobs-images.s3.us-east-2.amazonaws.com/nobs-logos-text-purple.png)
